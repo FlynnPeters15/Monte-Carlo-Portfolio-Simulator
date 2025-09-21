@@ -42,7 +42,7 @@ import matplotlib.pyplot as plt
 
 # Config & Helpers
 
-DEFAULT_API_KEY = os.getenv("POLYGON_API_KEY", "")
+DEFAULT_API_KEY = os.getenv("POLYGON_API_KEY", "__xM31vthosrQau8asNbRQdjYjzcjnJh")
 ASSET_MAP = {
     "BTC": "X:BTCUSD",   # Polygon crypto ticker format
     "VOO": "VOO",
