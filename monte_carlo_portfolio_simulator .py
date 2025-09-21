@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/xsr/bin/env python3
 """
 Monte Carlo Portfolio Simulator (BTC, VOO, VUG, GLDM) vs S&P 500
 =================================================================
@@ -21,8 +21,7 @@ python monte_carlo_portfolio_simulator.py \
 Notes
 - Set your Polygon API key via env POLYGON_API_KEY or pass --api-key. If neither is set, a default provided by the user here is used.
 - For the S&P 500 benchmark, we try index ticker I:SPX first, then fall back to SPY if needed.
-- This uses a **Normal** assumption for returns (as requested). You may change to student‑t or bootstrapping if you like.
-- BTC trades 7d/week; equities/ETFs 5d/week. We align by the intersection of available dates so the covariance is well-defined.
+- BTC trades 7d/week; equities/ETFs 5d/week. Aligned by the intersection of available dates so the covariance is well-defined.
 """
 import argparse
 import os
@@ -37,13 +36,13 @@ import requests
 import numpy as np
 import pandas as pd
 import matplotlib
-matplotlib.use("Agg")  # headless-friendly; saves PNG without GUI
+matplotlib.use("Agg")  # saves PNG without GUI
 import matplotlib.pyplot as plt
 
-# -----------------------------
+
 # Config & Helpers
-# -----------------------------
-DEFAULT_API_KEY = os.getenv("POLYGON_API_KEY", "__xM31vthosrQau8asNbRQdjYjzcjnJh")
+
+DEFAULT_API_KEY = os.getenv("POLYGON_API_KEY", "")
 ASSET_MAP = {
     "BTC": "X:BTCUSD",   # Polygon crypto ticker format
     "VOO": "VOO",
@@ -74,9 +73,9 @@ def daterange_str(d: str) -> str:
         raise SystemExit(f"Invalid date '{d}'. Use YYYY-MM-DD.")
 
 
-# -----------------------------
+
 # Polygon data fetch
-# -----------------------------
+
 
 def fetch_polygon_aggregates(
     ticker: str,
@@ -123,7 +122,7 @@ def fetch_polygon_aggregates(
         next_params = {"apiKey": api_key} if next_url else {}
         pages += 1
         if pages > 1:
-            time.sleep(0.1)  # be polite
+            time.sleep(0.1)  
 
     if not all_rows:
         raise RuntimeError(f"No results for {ticker} in {start}..{end}.")
@@ -152,9 +151,9 @@ def get_sp500_series(start: str, end: str, api_key: str) -> Tuple[str, pd.Series
     raise SystemExit(f"Failed to fetch S&P 500 via {SP500_TICKERS}. Last error: {_fmt_exc(last_err)}")
 
 
-# -----------------------------
+
 # Math & Metrics
-# -----------------------------
+
 
 def to_log_returns(price: pd.Series) -> pd.Series:
     return np.log(price / price.shift(1)).dropna()
@@ -217,9 +216,9 @@ def var_cvar_from_paths(terminal_values: np.ndarray, alpha: float = 0.05) -> Tup
     return float(q), float(cvar)
 
 
-# -----------------------------
+
 # Monte Carlo
-# -----------------------------
+
 
 def simulate_paths(
     mean_vec: np.ndarray,
@@ -252,9 +251,9 @@ def simulate_univariate(mean: float, var: float, days: int, sims: int, seed: int
     return paths
 
 
-# -----------------------------
+
 # Main script
-# -----------------------------
+
 
 def parse_weights(w_str: str, assets: List[str]) -> Dict[str, float]:
     if not w_str or w_str.lower() == "equal":
@@ -363,9 +362,9 @@ def main() -> None:
     p_loss = float((port_terminal < 1.0).mean())
     p_loss_spx = float((spx_terminal < 1.0).mean())
 
-    # ---------------
+
     # Chart: line comparison (median paths)
-    # ---------------
+  
     initial = float(args.initial)
     x = np.arange(port_p50.shape[0])
 
@@ -385,9 +384,9 @@ def main() -> None:
     plt.savefig(out_path, dpi=140)
     print(f"Saved chart to {out_path}")
 
-    # ---------------
+
     # Console stats
-    # ---------------
+
     print("==== Historical (based on overlap window) ====")
     print(f"Length (days): {hist_stats['Length (days)']}")
     print(
