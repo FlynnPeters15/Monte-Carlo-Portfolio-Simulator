@@ -1,7 +1,6 @@
 #!/xsr/bin/env python3
 """
 Monte Carlo Portfolio Simulator (BTC, VOO, VUG, GLDM) vs S&P 500
-=================================================================
 
 What this script does
 - Pulls historical daily prices from Polygon.io for BTC (X:BTCUSD), VOO, VUG, GLDM, and S&P 500 (I:SPX with SPY fallback).
@@ -10,18 +9,6 @@ What this script does
 - Simulates S&P 500 separately from its own return distribution for a side‑by‑side comparison.
 - Outputs: a **line chart** comparing the projected median of your portfolio vs. S&P 500 and a printed stats block (Sharpe, CAGR, vol, VaR, CVaR, drawdowns, etc.).
 
-Usage examples
---------------
-python monte_carlo_portfolio_simulator.py \
-  --start 2018-01-01 --end 2025-09-13 \
-  --sims 10000 --horizon 252 \
-  --weights BTC:0.20,VOO:0.40,VUG:0.30,GLDM:0.10 \
-  --rf 0.02 --initial 10000
-
-Notes
-- Set your Polygon API key via env POLYGON_API_KEY or pass --api-key. If neither is set, a default provided by the user here is used.
-- For the S&P 500 benchmark, we try index ticker I:SPX first, then fall back to SPY if needed.
-- BTC trades 7d/week; equities/ETFs 5d/week. Aligned by the intersection of available dates so the covariance is well-defined.
 """
 import argparse
 import os
